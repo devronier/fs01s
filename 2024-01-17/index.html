@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <form>
+      <input id="email" type="text" name="email" placeholder="Email" />
+      <input
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Senha"
+      />
+    </form>
+
+    <button onclick="login()">Entrar</button>
+
+    <script>
+      async function login() {
+        try {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          const usuario = { email, password };
+
+          const resposta = await fetch("http://localhost:3001/auth/login", {
+            method: "POST",
+            body: JSON.stringify(usuario),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
+
+          const dados = await resposta.json();
+
+          if (resposta.ok) {
+            localStorage.setItem("nome", dados.user.name);
+
+            window.location.href = "welcome.html";
+          } else {
+            alert("Email/Senha incorretos");
+          }
+        } catch (error) {
+          alert("Login erro");
+        }
+      }
+    </script>
+  </body>
+</html>
